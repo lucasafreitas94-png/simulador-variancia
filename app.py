@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 
 # =====================
 # CONFIG
@@ -42,7 +43,7 @@ perda = -stake
 volume = np.arange(1, n_apostas + 1)
 ev_linha = volume * stake * ev
 
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(9, 5))
 
 for _ in range(simulacoes):
     resultados = np.where(
@@ -53,6 +54,8 @@ for _ in range(simulacoes):
     acumulado = np.cumsum(resultados)
     plt.plot(volume, acumulado, alpha=0.25)
 
+plt.plot(volume, acumulado, alpha=0.25)
+
 plt.plot(volume, ev_linha, "k--", linewidth=2, label="EV Esperado")
 
 plt.xlabel("Volume (número de apostas)")
@@ -60,5 +63,11 @@ plt.ylabel("Resultado (R$)")
 plt.title("Cenários de Variância vs EV")
 plt.legend()
 
+def formato_real(x, pos):
+    return f'R$ {x:,.0f}'.replace(',', '.')
+
+plt.gca().yaxis.set_major_formatter(FuncFormatter(formato_real))
+
+plt.tight_layout()
 st.pyplot(plt)
 
