@@ -54,10 +54,9 @@ for _ in range(simulacoes):
         perda
     )
     acumulado = np.cumsum(resultados)
-todas_simulacoes.append(acumulado)
-ax.plot(volume, acumulado, alpha=0.25)
+    todas_simulacoes.append(acumulado)
+    ax.plot(volume, acumulado, alpha=0.25)
 
-plt.plot(volume, acumulado, alpha=0.25)
 
 ax.plot(volume, ev_linha, "k--", linewidth=2, label="EV Esperado")
 
