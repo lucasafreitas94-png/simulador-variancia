@@ -43,7 +43,9 @@ perda = -stake
 volume = np.arange(1, n_apostas + 1)
 ev_linha = volume * stake * ev
 
-plt.figure(figsize=(9, 5))
+fig, ax = plt.subplots(figsize=(7.5, 4))
+
+todas_simulacoes = []
 
 for _ in range(simulacoes):
     resultados = np.where(
@@ -52,16 +54,17 @@ for _ in range(simulacoes):
         perda
     )
     acumulado = np.cumsum(resultados)
-    plt.plot(volume, acumulado, alpha=0.25)
+todas_simulacoes.append(acumulado)
+ax.plot(volume, acumulado, alpha=0.25)
 
 plt.plot(volume, acumulado, alpha=0.25)
 
-plt.plot(volume, ev_linha, "k--", linewidth=2, label="EV Esperado")
+ax.plot(volume, ev_linha, "k--", linewidth=2, label="EV Esperado")
 
-plt.xlabel("Volume (número de apostas)")
-plt.ylabel("Resultado (R$)")
-plt.title("Cenários de Variância vs EV")
-plt.legend()
+ax.set_xlabel("Volume (número de apostas)")
+ax.set_ylabel("Resultado (R$)")
+ax.set_title("Cenários de Variância vs EV")
+ax.legend()
 
 def formato_real(x, pos):
     return f'R$ {x:,.0f}'.replace(',', '.')
@@ -69,5 +72,5 @@ def formato_real(x, pos):
 plt.gca().yaxis.set_major_formatter(FuncFormatter(formato_real))
 
 plt.tight_layout()
-st.pyplot(plt)
+st.pyplot(fig, use_container_width=False)
 
