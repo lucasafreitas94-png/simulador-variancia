@@ -43,10 +43,17 @@ perda = -stake
 volume = np.arange(1, n_apostas + 1)
 ev_linha = volume * stake * ev
 
-fig, ax = plt.subplots(figsize=(7.5, 4))
+# Configuração visual FORÇADA (igual Colab)
+plt.rcParams.update({
+    "font.size": 9,
+    "axes.titlesize": 11,
+    "axes.labelsize": 9,
+    "legend.fontsize": 9
+})
 
-todas_simulacoes = []
+fig, ax = plt.subplots(figsize=(8, 4.5), dpi=100)
 
+# Gerar e plotar exatamente N cenários
 for _ in range(simulacoes):
     resultados = np.where(
         np.random.rand(n_apostas) < p_win,
@@ -54,22 +61,30 @@ for _ in range(simulacoes):
         perda
     )
     acumulado = np.cumsum(resultados)
-    todas_simulacoes.append(acumulado)
-    ax.plot(volume, acumulado, alpha=0.25)
+    ax.plot(volume, acumulado, alpha=0.35, linewidth=1)
 
-
-ax.plot(volume, ev_linha, "k--", linewidth=2, label="EV Esperado")
+# Linha de EV esperado
+ax.plot(
+    volume,
+    ev_linha,
+    linestyle="--",
+    color="black",
+    linewidth=2,
+    label="EV Esperado"
+)
 
 ax.set_xlabel("Volume (número de apostas)")
 ax.set_ylabel("Resultado (R$)")
 ax.set_title("Cenários de Variância vs EV")
 ax.legend()
 
+# Formatação monetária correta
 def formato_real(x, pos):
-    return f'R$ {x:,.0f}'.replace(',', '.')
+    return f"R$ {x:,.0f}".replace(",", ".")
 
-plt.gca().yaxis.set_major_formatter(FuncFormatter(formato_real))
+ax.yaxis.set_major_formatter(FuncFormatter(formato_real))
 
 plt.tight_layout()
-st.pyplot(fig, use_container_width=False)
 
+# IMPORTANTE: NÃO usar container width
+st.pyplot(fig, use_container_width=False)
